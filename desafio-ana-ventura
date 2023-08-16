@@ -1,0 +1,85 @@
+class CaixaDaLanchonete {
+
+    calcularValorDaCompra(metodoDePagamento, itens) {
+        return "";
+    }
+
+}
+export { CaixaDaLanchonete };
+# Definição do cardápio
+menu = {
+    "cafe": {"descrição": "Café", "valor": 3.00},
+    "chantily": {"descrição": "Chantily (extra do Café)", "valor": 1.50},
+    "suco": {"descrição": "Suco Natural", "valor": 6.20},
+    "sanduiche": {"descrição": "Sanduíche", "valor": 6.50},
+    "queijo": {"descrição": "Queijo (extra do Sanduíche)", "valor": 2.00},
+    "salgado": {"descrição": "Salgado", "valor": 7.25},
+    "combo1": {"descrição": "1 Suco e 1 Sanduíche", "valor": 9.50},
+    "combo2": {"descrição": "1 Café e 1 Sanduíche", "valor": 7.50}
+}
+
+# Definição das formas de pagamento
+formas_de_pagamento = ["dinheiro", "debito", "credito"]
+
+# Função para calcular o valor total da compra
+def calcular_valor_compra(itens, forma_pagamento):
+    if not itens:
+        return "Não há itens no carrinho de compra!"
+    
+    valor_total = 0
+    
+    for item in itens:
+        codigo = item[0]
+        quantidade = item[1]
+        
+        if codigo not in menu:
+            return "Item inválido!"
+        
+        valor_item = menu[codigo]["valor"]
+        
+        # Verificar se é um item extra
+        if "extra" in codigo:
+            item_principal = codigo.split("_")[0]
+            if item_principal not in [i[0] for i in itens]:
+                return "Item extra não pode ser pedido sem o principal"
+        
+        valor_total += valor_item * quantidade
+    
+    # Aplicar descontos/acréscimos
+    if forma_pagamento == "dinheiro":
+        valor_total *= 0.95
+    elif forma_pagamento == "credito":
+        valor_total *= 1.03
+    
+    return valor_total
+
+# Função para validar a forma de pagamento
+def validar_forma_pagamento(forma_pagamento):
+    if forma_pagamento not in formas_de_pagamento:
+        return "Forma de pagamento inválida!"
+    
+    return None
+
+# Função principal para fazer o pedido
+def fazer_pedido(pedido_itens, forma_pagamento):
+    validacao = validar_forma_pagamento(forma_pagamento)
+    if validacao:
+        return validacao
+    
+    valor_total = calcular_valor_compra(pedido_itens, forma_pagamento)
+    
+    if type(valor_total) == str:
+        return valor_total
+    
+    return f"Valor total da compra: R$ {valor_total:.2f}"
+
+# Exemplos de pedidos
+pedido1 = [("cafe", 2), ("chantily", 1), ("suco", 1)]
+pedido2 = [("sanduiche", 2), ("queijo", 2)]
+pedido3 = [("combo1", 1)]
+forma_pagamento = "credito"
+
+# Fazer os pedidos
+print(fazer_pedido(pedido1, forma_pagamento))
+print(fazer_pedido(pedido2, forma_pagamento))
+print(fazer_pedido(pedido3, forma_pagamento))
